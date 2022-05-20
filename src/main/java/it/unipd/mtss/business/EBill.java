@@ -14,6 +14,7 @@ public class EBill implements Bill {
     @Override
     public double getOrderPrice(List<EItem> itemsOrdered, User user)
             throws BillException {
-        return 0.0;
+        double total = itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
+        return total;
     }
 }
