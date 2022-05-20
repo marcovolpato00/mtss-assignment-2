@@ -3,17 +3,8 @@
 // MARCO VOLPATO 1224826
 ////////////////////////////////////////////////////////////////////
 
+package it.unipd.mtss.model;
 
-package it.unipd.mtss;
-
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
+public class EItemTest {
+    
 }
