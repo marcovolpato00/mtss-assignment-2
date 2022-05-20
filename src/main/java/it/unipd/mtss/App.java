@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////
-// [DAVIDE] [MILAN] [1216733]
-// [MARCO] [VOLPATO] [1224826]
+// DAVIDE MILAN 1216733
+// MARCO VOLPATO 1224826
 ////////////////////////////////////////////////////////////////////
 
 
@@ -12,7 +12,7 @@ package it.unipd.mtss;
  */
 public class App 
 {
-    public static void main( String[] args )
+    public static void main( String[ args )
     {
         System.out.println( "Hello World!" );
     }
