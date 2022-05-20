@@ -11,9 +11,12 @@ import it.unipd.mtss.model.EItemType;
 import it.unipd.mtss.model.User;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
-import java.util.*;
+import static org.junit.Assert.assertEquals;
 
 public class EBillTest {
     @Test
@@ -25,13 +28,14 @@ public class EBillTest {
                 new EItem(EItemType.MOUSE, "Topolino", 20.10),
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
+        User user = new User(
+                1,
+                "Jesus",
+                new GregorianCalendar(1000, Calendar.DECEMBER, 25).getTime()
+        );
         double total = bill.getOrderPrice(
                 items,
-                new User(
-                        1,
-                        "Jesus",
-                        new GregorianCalendar(1000, Calendar.DECEMBER, 25).getTime()
-                )
+                user
         );
 
         assertEquals(199.90 + 98.50 + 20.10 + 449.50, total, 0.0);
