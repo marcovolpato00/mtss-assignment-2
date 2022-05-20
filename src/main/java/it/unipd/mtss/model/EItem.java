@@ -6,9 +6,9 @@
 package it.unipd.mtss.model;
 
 public class EItem {
-    private EItemType itemType;
-    private String name;
-    private double price;
+    private final EItemType itemType;
+    private final String name;
+    private final double price;
 
     public EItem(EItemType itemType, String name, double price) {
         this.itemType = itemType;

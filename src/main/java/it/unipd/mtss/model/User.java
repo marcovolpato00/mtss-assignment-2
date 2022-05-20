@@ -8,9 +8,9 @@ package it.unipd.mtss.model;
 import java.util.Date;
 
 public class User {
-    private int id;
-    private String name;
-    private Date birth;
+    private final int id;
+    private final String name;
+    private final Date birth;
 
     public User(int id, String name, Date birth) {
         this.id = id;
