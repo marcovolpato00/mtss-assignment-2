@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": "file:///home/marco/projects/mtss-assignment-2/.github/workflows/build.yml"
+    },
+    "java.configuration.updateBuildConfiguration": "interactive"
+}
