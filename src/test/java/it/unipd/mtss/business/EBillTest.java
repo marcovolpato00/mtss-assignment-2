@@ -249,4 +249,132 @@ public class EBillTest {
         double assertion = 449.50 * 2 + 39.90;
         assertEquals(assertion, total, 0.1);
     }
+
+
+    /*
+    ======================
+    ====== ISSUE #7 ======
+    ======================
+    */
+
+    @Test
+    public void testNumberOfItems_moreThanThirty () throws BillException {
+        exception.expect(BillException.class);
+
+        EBill bill = new EBill();
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
+        );
+        bill.getOrderPrice(items, testUser);
+    }
+
+    @Test
+    public void testNumberOfItems_Thirty () throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
+        );
+        double total =bill.getOrderPrice(items, testUser);
+
+        double assertion = 449.50 * 30;
+        assertEquals(assertion, total, 0.1);
+    }
+
+
+    @Test
+    public void testNumberOfItems_LessThanThirty () throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)                
+        );
+        double total =bill.getOrderPrice(items, testUser);
+
+        double assertion = 449.50 * 25;
+        assertEquals(assertion, total, 0.1);
+    }
 }

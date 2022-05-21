@@ -40,7 +40,7 @@ public class EBill implements Bill {
 
     /*
     ======================
-    ====== ISSUE #3 ======
+    ====== ISSUE #4 ======
     ======================
     */
     public double getMouseEqualKeyboardsDiscount(List<EItem> itemsOrdered){
@@ -66,7 +66,18 @@ public class EBill implements Bill {
     }
 
 
-
+    /*
+    ======================
+    ====== ISSUE #7 ======
+    ======================
+    */
+    public boolean checkThirtyItemsOrder(List<EItem> itemsOrdered){
+        if(itemsOrdered.stream().count() > 30){
+            System.out.println("Non è possibile acquistare più di 30 articoli per ordine");
+            return true;
+        }
+        return false;
+    }
 
     /*
         ======================
@@ -80,7 +91,7 @@ public class EBill implements Bill {
         if (itemsOrdered.isEmpty()) {
             throw new BillException();
         }
-
+        if(checkThirtyItemsOrder(itemsOrdered)) throw new BillException();
 
         double total = itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
 
