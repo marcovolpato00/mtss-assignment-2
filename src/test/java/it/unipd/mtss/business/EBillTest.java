@@ -15,11 +15,12 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -64,5 +65,21 @@ public class EBillTest {
         EBill bill = new EBill();
         List<EItem> items = new ArrayList<>();
         bill.getOrderPrice(items, testUser);
+    }
+
+    @Test
+    public void testGiftCheapestOnTenMice() throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = new ArrayList<>(Collections.nCopies(
+                8,
+                new EItem(EItemType.MOUSE, "Topolino", 20.10)
+        ));
+        items.add(new EItem(EItemType.MOUSE, "Topolino costoso", 39.90));
+        items.add(new EItem(EItemType.MOUSE, "Topolino cheap", 14.90));
+
+        double total = bill.getOrderPrice(items, testUser);
+
+        assertEquals((20.10 * 8) + 39.90, total, 0.0);
     }
 }

@@ -8,6 +8,7 @@ package it.unipd.mtss.business;
 import java.util.List;
 import it.unipd.mtss.business.exception.BillException;
 import it.unipd.mtss.model.EItem;
+import it.unipd.mtss.model.EItemType;
 import it.unipd.mtss.model.User;
 
 public class EBill implements Bill {
@@ -17,7 +18,24 @@ public class EBill implements Bill {
         if (itemsOrdered.isEmpty()) {
             throw new BillException();
         }
+
         double total = itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
+
+        // check if there are at least 10 mice
+        long miceCount = itemsOrdered
+                .stream()
+                .filter(item -> item.getItemType() == EItemType.MOUSE)
+                .count();
+        if (miceCount >= 10) {
+            // find the cheapest and subtract from total
+            EItem cheapest = itemsOrdered
+                    .stream()
+                    .filter(item -> item.getItemType() == EItemType.MOUSE)
+                    .reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b)
+                    .get();
+            total -= cheapest.getPrice();
+        }
+
         return total;
     }
 }
