@@ -12,6 +12,38 @@ import it.unipd.mtss.model.EItemType;
 import it.unipd.mtss.model.User;
 
 public class EBill implements Bill {
+
+    /*
+    ======================
+    ====== ISSUE #2 ======
+    ======================
+    */
+    public double getCPUDiscount(List<EItem> itemsOrdered){
+        double discountCPU = 0;
+        long cpuCount = itemsOrdered
+                .stream()
+                .filter(item -> item.getItemType() == EItemType.PROCESSORE)
+                .count();
+
+        if(cpuCount > 5){
+            EItem cheapest = itemsOrdered
+                    .stream()
+                    .filter(item -> item.getItemType() == EItemType.PROCESSORE)
+                    .reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b)
+                    .get();
+            discountCPU = (cheapest.getPrice() / 2);
+            System.out.println(discountCPU);
+        }
+        return discountCPU;
+    }
+
+
+    /*
+        ======================
+        ==== COSTO TOTALE ====
+        ======================
+    */
+
     @Override
     public double getOrderPrice(List<EItem> itemsOrdered, User user)
             throws BillException {
@@ -35,7 +67,8 @@ public class EBill implements Bill {
                     .get();
             total -= cheapest.getPrice();
         }
-
-        return total;
+        double discountCPU = getCPUDiscount(itemsOrdered);
+        return total - discountCPU;
     }
+
 }
