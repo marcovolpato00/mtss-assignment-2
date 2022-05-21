@@ -39,6 +39,36 @@ public class EBill implements Bill {
 
 
     /*
+    ======================
+    ====== ISSUE #3 ======
+    ======================
+    */
+    public double getMouseEqualKeyboardsDiscount(List<EItem> itemsOrdered){
+        double discountMKEqual = 0;
+        long mouseCount = itemsOrdered
+                .stream()
+                .filter(item -> item.getItemType() == EItemType.MOUSE)
+                .count();
+        long keyboardCount = itemsOrdered
+                .stream()
+                .filter(item -> item.getItemType() == EItemType.TASTIERA)
+                .count();
+
+        if(mouseCount == keyboardCount){
+            EItem cheapest = itemsOrdered
+                    .stream()
+                    .filter(item -> (item.getItemType() == EItemType.MOUSE || item.getItemType() == EItemType.TASTIERA))
+                    .reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b)
+                    .get();
+            discountMKEqual = cheapest.getPrice();
+        }
+        return discountMKEqual;
+    }
+
+
+
+
+    /*
         ======================
         ==== COSTO TOTALE ====
         ======================
@@ -50,6 +80,7 @@ public class EBill implements Bill {
         if (itemsOrdered.isEmpty()) {
             throw new BillException();
         }
+
 
         double total = itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
 
@@ -68,7 +99,8 @@ public class EBill implements Bill {
             total -= cheapest.getPrice();
         }
         double discountCPU = getCPUDiscount(itemsOrdered);
-        total -= discountCPU;
+        double discountMKEqual = getMouseEqualKeyboardsDiscount(itemsOrdered);
+        total = total - discountCPU - discountMKEqual;
 
         if (total >= 1000.0) {
             total -= total * 0.1;

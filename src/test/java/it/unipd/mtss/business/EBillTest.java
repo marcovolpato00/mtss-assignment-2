@@ -163,7 +163,7 @@ public class EBillTest {
                 user
         );
         double ass = (111.90 / 2) + 222.90 + 333.90 + 444.90 + 555.90 + 666.90 + 98.50 + 20.10 + 449.50;
-        assertEquals(ass, total, 0.0);
+        assertEquals(ass, total, 0.1);
     }
 
     @Test
@@ -207,5 +207,46 @@ public class EBillTest {
         expectedTotal = expectedTotal - (expectedTotal * 0.1);
 
         assertEquals(expectedTotal, total, 0.0);
+    }
+
+
+
+    /*
+    ======================
+    ====== ISSUE #3 ======
+    ======================
+    */
+
+    @Test
+    public void testMouseKeyboard_NotEqual() throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.MOUSE, "Topolino costoso", 39.90),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
+        );
+
+        double total = bill.getOrderPrice(items, testUser);
+
+        double assertion = 449.50 * 2 + 39.90;
+        assertEquals(assertion, total, 0.1);
+    }
+    
+    @Test
+    public void testMouseKeyboard_Equal() throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.MOUSE, "Topolino costoso", 39.90),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
+                new EItem(EItemType.MOUSE, "Topolino cheap", 14.90)
+        );
+
+        double total = bill.getOrderPrice(items, testUser);
+
+        double assertion = 449.50 * 2 + 39.90;
+        assertEquals(assertion, total, 0.1);
     }
 }
