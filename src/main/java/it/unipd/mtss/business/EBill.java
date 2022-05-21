@@ -93,6 +93,10 @@ public class EBill implements Bill {
         return 0.0;
     }
 
+    public double getCommission(double orderTotal) {
+        return (orderTotal < 10.0) ? 2.0 : 0.0;
+    }
+
     public double getOrderPriceNoDiscount(List<EItem> itemsOrdered) throws BillException {
         if (itemsOrdered.isEmpty()) {
             throw new BillException("Items list can't be empty");
@@ -100,7 +104,10 @@ public class EBill implements Bill {
 
         checkThirtyItemsOrder(itemsOrdered);
 
-        return itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
+        double total = itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
+        total += getCommission(total);
+
+        return total;
     }
 
     @Override

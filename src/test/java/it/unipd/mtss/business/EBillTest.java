@@ -623,6 +623,33 @@ public class EBillTest {
         assertEquals(true, bill.giftOrder(user9, 0.95, LocalTime.of(18, 18, 15)));
         assertEquals(true, bill.giftOrder(user10, 0.95, LocalTime.of(18, 18, 15)));
         assertEquals(false, bill.giftOrder(user11, 0.99, LocalTime.of(18, 40, 35)));
-        assertEquals(10, bill.giftedOrders);
+        assertEquals(10, bill.giftedOrders);    
+    }
+
+    @Test
+    public void testOrderHasCommission() throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.MOUSE, "Topolino cheap", 9.90)
+        );
+
+        double total = bill.getOrderPriceNoDiscount(items);
+
+        assertEquals(9.90 + 2.0, total, 0.0);
+    }
+
+    @Test
+    public void testOrderHasNotCommission() throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.MOUSE, "Topolino cheap", 9.90),
+                new EItem(EItemType.MOUSE, "Topolino cheap", 9.90)
+        );
+
+        double total = bill.getOrderPriceNoDiscount(items);
+
+        assertEquals(19.80, total, 0.0);
     }
 }
