@@ -58,27 +58,24 @@ public class EBill implements Bill {
         return 0.0;
     }
 
-    public boolean checkThirtyItemsOrder(List<EItem> itemsOrdered) {
-        if (itemsOrdered.stream().count() > 30) {
-            System.out.println("Non è possibile acquistare più di 30 articoli per ordine");
-            return true;
+    public void checkThirtyItemsOrder(List<EItem> itemsOrdered) throws BillException {
+        if (itemsOrdered.size() > 30) {
+            throw new BillException("Can't process a order with items >30");
         }
-        return false;
     }
 
     public double getMiceGift(List<EItem> itemsOrdered) {
         // check if there are at least 10 mice
-        long miceCount = itemsOrdered
-                .stream()
-                .filter(item -> item.getItemType() == EItemType.MOUSE)
-                .count();
+        long miceCount = filterByItemType(
+                itemsOrdered,
+                EItemType.MOUSE
+        ).count();
         if (miceCount >= 10) {
             // find the cheapest and return its price
-            EItem cheapest = itemsOrdered
-                    .stream()
-                    .filter(item -> item.getItemType() == EItemType.MOUSE)
-                    .reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b)
-                    .get();
+            EItem cheapest = filterByItemType(
+                    itemsOrdered,
+                    EItemType.MOUSE
+            ).reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b).get();
             return cheapest.getPrice();
         }
         return 0.0;
@@ -95,12 +92,10 @@ public class EBill implements Bill {
     public double getOrderPrice(List<EItem> itemsOrdered, User user)
             throws BillException {
         if (itemsOrdered.isEmpty()) {
-            throw new BillException();
+            throw new BillException("Items list can't be empty");
         }
 
-        if (checkThirtyItemsOrder(itemsOrdered)) {
-            throw new BillException();
-        }
+        checkThirtyItemsOrder(itemsOrdered);
 
         double total = itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
 
