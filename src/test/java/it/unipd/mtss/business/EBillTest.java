@@ -71,18 +71,11 @@ public class EBillTest {
                 new EItem(EItemType.SCHEDAMADRE, "Mobo 1", 98.50),
                 new EItem(EItemType.MOUSE, "Topolino", 20.10),
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
-        );
-        User user = new User(
-                1,
-                "Jesus",
-                new GregorianCalendar(1000, Calendar.DECEMBER, 25).getTime()
-        );
-        double total = bill.getOrderPrice(
-                items,
-                user
-        );
+        );        
+        //double total = bill.getOrderPriceNoDiscount(items);
+        double discount = bill.getCPUDiscount(items);
 
-        assertEquals(98.50 + 20.10 + 449.50, total, 0.1);
+        assertEquals(0, discount, 0.1);
     }
 
     @Test
@@ -98,17 +91,11 @@ public class EBillTest {
                 new EItem(EItemType.PROCESSORE, "Intel i5 4444k", 444.90),
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
-        User user = new User(
-                1,
-                "Jesus",
-                new GregorianCalendar(1000, Calendar.DECEMBER, 25).getTime()
-        );
-        double total = bill.getOrderPrice(
-                items,
-                user
-        );
 
-        assertEquals(111.90 + 222.90 + 333.90 + 444.90 + 98.50 + 20.10 + 449.50, total, 0.1);
+        //double total = bill.getOrderPriceNoDiscount(items);
+        double discount = bill.getCPUDiscount(items);
+
+        assertEquals(0, discount, 0.1);
     }
 
     @Test
@@ -125,17 +112,11 @@ public class EBillTest {
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
                 new EItem(EItemType.PROCESSORE, "Intel i5 5555k", 555.90)
         );
-        User user = new User(
-                1,
-                "Jesus",
-                new GregorianCalendar(1000, Calendar.DECEMBER, 25).getTime()
-        );
-        double total = bill.getOrderPrice(
-                items,
-                user
-        );        
 
-        assertEquals(111.90 + 222.90 + 333.90 + 444.90 + 555.90 + 98.50 + 20.10 + 449.50, total, 0.1);
+        //double total = bill.getOrderPriceNoDiscount(items);
+        double discount = bill.getCPUDiscount(items);
+
+        assertEquals(0, discount, 0.1);
     }
 
     @Test
@@ -153,17 +134,11 @@ public class EBillTest {
                 new EItem(EItemType.PROCESSORE, "Intel i5 5555k", 555.90),
                 new EItem(EItemType.PROCESSORE, "Intel i5 6666k", 666.90)
         );
-        User user = new User(
-                1,
-                "Jesus",
-                new GregorianCalendar(1000, Calendar.DECEMBER, 25).getTime()
-        );
-        double total = bill.getOrderPrice(
-                items,
-                user
-        );
-        double ass = (111.90 / 2) + 222.90 + 333.90 + 444.90 + 555.90 + 666.90 + 98.50 + 20.10 + 449.50;
-        assertEquals(ass, total, 0.1);
+
+        //double total = bill.getOrderPriceNoDiscount(items);
+        double discount = bill.getCPUDiscount(items);
+
+        assertEquals(55.95, discount, 0.1);
     }
 
     @Test
@@ -212,7 +187,7 @@ public class EBillTest {
 
     /*
     ======================
-    ====== ISSUE #4 ======
+    ====== ISSUE #5 ======
     ======================
     */
 
@@ -226,10 +201,8 @@ public class EBillTest {
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
 
-        double total = bill.getOrderPrice(items, testUser);
-
-        double assertion = 449.50 * 2 + 39.90;
-        assertEquals(assertion, total, 0.1);
+        double discount = bill.getMouseEqualKeyboardsDiscount(items);
+        assertEquals(0, discount, 0.1);
     }
     
     @Test
@@ -243,10 +216,8 @@ public class EBillTest {
                 new EItem(EItemType.MOUSE, "Topolino cheap", 14.90)
         );
 
-        double total = bill.getOrderPrice(items, testUser);
-
-        double assertion = 449.50 * 2 + 39.90;
-        assertEquals(assertion, total, 0.1);
+        double discount = bill.getMouseEqualKeyboardsDiscount(items);
+        assertEquals(14.90, discount, 0.1);
     }
 
 
@@ -265,8 +236,6 @@ public class EBillTest {
                 35,
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
-
-        bill.getOrderPrice(items, testUser);
     }
 
     @Test
@@ -277,11 +246,6 @@ public class EBillTest {
                 30,
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
-
-        double total =bill.getOrderPrice(items, testUser);
-
-        double assertion = 449.50 * 30;
-        assertEquals(assertion, total, 0.1);
     }
 
 
@@ -293,10 +257,5 @@ public class EBillTest {
                 15,
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
-
-        double total = bill.getOrderPrice(items, testUser);
-
-        double assertion = 449.50 * 25;
-        assertEquals(assertion, total, 0.1);
     }
 }

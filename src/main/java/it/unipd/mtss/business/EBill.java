@@ -32,7 +32,6 @@ public class EBill implements Bill {
 
             return cheapest.getPrice() / 2;
         }
-
         return 0.0;
     }
 
