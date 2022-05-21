@@ -261,6 +261,8 @@ public class EBillTest {
                 35,
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
+
+        bill.getOrderPriceNoDiscount(items);
     }
 
     @Test
@@ -271,6 +273,8 @@ public class EBillTest {
                 30,
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
+
+        bill.getOrderPriceNoDiscount(items);
     }
 
 
@@ -282,5 +286,7 @@ public class EBillTest {
                 15,
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
+
+        bill.getOrderPriceNoDiscount(items);
     }
 }
