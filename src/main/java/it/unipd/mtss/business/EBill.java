@@ -68,7 +68,13 @@ public class EBill implements Bill {
             total -= cheapest.getPrice();
         }
         double discountCPU = getCPUDiscount(itemsOrdered);
-        return total - discountCPU;
+        total -= discountCPU;
+
+        if (total >= 1000.0) {
+            total -= total * 0.1;
+        }
+
+        return total;
     }
 
 }
