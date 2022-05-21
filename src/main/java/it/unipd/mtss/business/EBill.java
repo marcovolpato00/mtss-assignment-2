@@ -6,84 +6,90 @@
 package it.unipd.mtss.business;
 
 import java.util.List;
+import java.util.stream.Stream;
+
 import it.unipd.mtss.business.exception.BillException;
 import it.unipd.mtss.model.EItem;
 import it.unipd.mtss.model.EItemType;
 import it.unipd.mtss.model.User;
 
 public class EBill implements Bill {
-
-    /*
-    ======================
-    ====== ISSUE #2 ======
-    ======================
-    */
-    public double getCPUDiscount(List<EItem> itemsOrdered){
-        double discountCPU = 0;
-        long cpuCount = itemsOrdered
-                .stream()
-                .filter(item -> item.getItemType() == EItemType.PROCESSORE)
-                .count();
-
-        if(cpuCount > 5){
-            EItem cheapest = itemsOrdered
-                    .stream()
-                    .filter(item -> item.getItemType() == EItemType.PROCESSORE)
-                    .reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b)
-                    .get();
-            discountCPU = (cheapest.getPrice() / 2);
-            System.out.println(discountCPU);
-        }
-        return discountCPU;
+    public Stream<EItem> filterByItemType(List<EItem> items, EItemType type) {
+        return items.stream().filter(item -> item.getItemType() == type);
     }
 
+    public double getCPUDiscount(List<EItem> itemsOrdered) {
+        long cpuCount = filterByItemType(
+                itemsOrdered,
+                EItemType.PROCESSORE
+        ).count();
 
-    /*
-    ======================
-    ====== ISSUE #4 ======
-    ======================
-    */
-    public double getMouseEqualKeyboardsDiscount(List<EItem> itemsOrdered){
-        double discountMKEqual = 0;
-        long mouseCount = itemsOrdered
-                .stream()
-                .filter(item -> item.getItemType() == EItemType.MOUSE)
-                .count();
-        long keyboardCount = itemsOrdered
-                .stream()
-                .filter(item -> item.getItemType() == EItemType.TASTIERA)
-                .count();
+        if (cpuCount > 5) {
+            EItem cheapest = filterByItemType(
+                    itemsOrdered,
+                    EItemType.PROCESSORE
+            ).reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b).get();
 
-        if(mouseCount == keyboardCount){
+            return cheapest.getPrice() / 2;
+        }
+
+        return 0.0;
+    }
+
+    public double getMouseEqualKeyboardsDiscount(List<EItem> itemsOrdered) {
+        long miceCount = filterByItemType(
+                itemsOrdered,
+                EItemType.MOUSE
+        ).count();
+        long keyboardsCount = filterByItemType(
+                itemsOrdered,
+                EItemType.TASTIERA
+        ).count();
+
+        if (miceCount == keyboardsCount) {
             EItem cheapest = itemsOrdered
                     .stream()
                     .filter(item -> (item.getItemType() == EItemType.MOUSE || item.getItemType() == EItemType.TASTIERA))
                     .reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b)
                     .get();
-            discountMKEqual = cheapest.getPrice();
+
+            return cheapest.getPrice();
         }
-        return discountMKEqual;
+        return 0.0;
     }
 
-
-    /*
-    ======================
-    ====== ISSUE #7 ======
-    ======================
-    */
-    public boolean checkThirtyItemsOrder(List<EItem> itemsOrdered){
-        if(itemsOrdered.stream().count() > 30){
+    public boolean checkThirtyItemsOrder(List<EItem> itemsOrdered) {
+        if (itemsOrdered.stream().count() > 30) {
             System.out.println("Non è possibile acquistare più di 30 articoli per ordine");
             return true;
         }
         return false;
     }
 
-    /*
-        ======================
-        ==== COSTO TOTALE ====
-        ======================
-    */
+    public double getMiceGift(List<EItem> itemsOrdered) {
+        // check if there are at least 10 mice
+        long miceCount = itemsOrdered
+                .stream()
+                .filter(item -> item.getItemType() == EItemType.MOUSE)
+                .count();
+        if (miceCount >= 10) {
+            // find the cheapest and return its price
+            EItem cheapest = itemsOrdered
+                    .stream()
+                    .filter(item -> item.getItemType() == EItemType.MOUSE)
+                    .reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b)
+                    .get();
+            return cheapest.getPrice();
+        }
+        return 0.0;
+    }
+
+    public double getBigOrderDiscount(double orderTotal) {
+        if (orderTotal >= 1000.0) {
+            return orderTotal * 0.1;
+        }
+        return 0.0;
+    }
 
     @Override
     public double getOrderPrice(List<EItem> itemsOrdered, User user)
@@ -91,31 +97,21 @@ public class EBill implements Bill {
         if (itemsOrdered.isEmpty()) {
             throw new BillException();
         }
-        if(checkThirtyItemsOrder(itemsOrdered)) throw new BillException();
+
+        if (checkThirtyItemsOrder(itemsOrdered)) {
+            throw new BillException();
+        }
 
         double total = itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
 
-        // check if there are at least 10 mice
-        long miceCount = itemsOrdered
-                .stream()
-                .filter(item -> item.getItemType() == EItemType.MOUSE)
-                .count();
-        if (miceCount >= 10) {
-            // find the cheapest and subtract from total
-            EItem cheapest = itemsOrdered
-                    .stream()
-                    .filter(item -> item.getItemType() == EItemType.MOUSE)
-                    .reduce((a, b) -> a.getPrice() < b.getPrice() ? a : b)
-                    .get();
-            total -= cheapest.getPrice();
-        }
-        double discountCPU = getCPUDiscount(itemsOrdered);
-        double discountMKEqual = getMouseEqualKeyboardsDiscount(itemsOrdered);
-        total = total - discountCPU - discountMKEqual;
+        double totalDiscount = 0.0;
 
-        if (total >= 1000.0) {
-            total -= total * 0.1;
-        }
+        totalDiscount += getMiceGift(itemsOrdered);
+        totalDiscount += getCPUDiscount(itemsOrdered);
+        totalDiscount += getBigOrderDiscount(total);
+        totalDiscount += getMouseEqualKeyboardsDiscount(itemsOrdered);
+
+        total -= totalDiscount;
 
         return total;
     }
