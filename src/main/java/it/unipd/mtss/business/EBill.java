@@ -36,6 +36,10 @@ public class EBill implements Bill {
             total -= cheapest.getPrice();
         }
 
+        if (total >= 1000.0) {
+            total -= total * 0.1;
+        }
+
         return total;
     }
 }
