@@ -50,9 +50,8 @@ public class EBillTest {
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
 
-        double total = bill.getOrderPrice(
-                items,
-                testUser
+        double total = bill.getOrderPriceNoDiscount(
+                items
         );
 
         assertEquals(199.90 + 98.50 + 20.10 + 449.50, total, 0.0);
@@ -176,7 +175,7 @@ public class EBillTest {
     }
 
     @Test
-    public void testGiftCheapestOnTenMice() throws BillException {
+    public void testGiftCheapestOnTenMice() {
         EBill bill = new EBill();
 
         List<EItem> items = new ArrayList<>(Collections.nCopies(
@@ -186,9 +185,25 @@ public class EBillTest {
         items.add(new EItem(EItemType.MOUSE, "Topolino costoso", 39.90));
         items.add(new EItem(EItemType.MOUSE, "Topolino cheap", 14.90));
 
-        double total = bill.getOrderPrice(items, testUser);
+        double gift = bill.getMiceGift(items);
 
-        assertEquals((20.10 * 8) + 39.90, total, 0.0);
+        assertEquals(14.90, gift, 0.0);
+    }
+
+    @Test
+    public void testNotGiftCheapestMouse() {
+        EBill bill = new EBill();
+
+        List<EItem> items = new ArrayList<>(Collections.nCopies(
+                6,
+                new EItem(EItemType.MOUSE, "Topolino", 20.10)
+        ));
+        items.add(new EItem(EItemType.MOUSE, "Topolino costoso", 39.90));
+        items.add(new EItem(EItemType.MOUSE, "Topolino cheap", 14.90));
+
+        double gift = bill.getMiceGift(items);
+
+        assertEquals(0, gift, 0.0);
     }
 
     @Test
@@ -201,9 +216,23 @@ public class EBillTest {
         );
         double total = bill.getOrderPriceNoDiscount(items);
 
-        double discountend = total - bill.getBigOrderDiscount(total);
+        double discount = bill.getBigOrderDiscount(total);
 
-        assertEquals(total - (total * 0.1), discountend, 0.0);
+        assertEquals(total * 0.1, discount, 0.0);
+    }
+
+    @Test
+    public void testSmallOrderNotDiscounted() throws BillException {
+        EBill bill = new EBill();
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.TASTIERA, "Tastiera El-Cheapo", 15.50),
+                new EItem(EItemType.MOUSE, "Mouse El-Cheapo", 9.90)
+        );
+        double total = bill.getOrderPriceNoDiscount(items);
+
+        double discount = bill.getBigOrderDiscount(total);
+
+        assertEquals(0.0, discount, 0.0);
     }
 
     /*
