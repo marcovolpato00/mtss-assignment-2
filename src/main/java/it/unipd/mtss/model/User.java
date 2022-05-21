@@ -5,14 +5,16 @@
 
 package it.unipd.mtss.model;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
+
 
 public class User {
     private final int id;
     private final String name;
-    private final Date birth;
+    private final LocalDate birth;
 
-    public User(int id, String name, Date birth) {
+    public User(int id, String name, LocalDate birth) {
         this.id = id;
         this.name = name;
         this.birth = birth;
@@ -26,7 +28,12 @@ public class User {
         return this.name;
     }
 
-    public Date getBirth() {
+    public LocalDate getBirth() {
         return this.birth;
+    }
+
+    public int getAge(){
+        LocalDate now = LocalDate.now();
+        return Period.between(birth, now).getYears();        
     }
 }

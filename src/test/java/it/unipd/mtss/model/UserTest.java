@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.GregorianCalendar;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +22,7 @@ public class UserTest {
         testUser = new User(
                 1,
                 "Someone",
-                new GregorianCalendar(2022, Calendar.MAY, 20).getTime()
+                LocalDate.of(1000, 12, 25)
         );
     }
 
@@ -38,11 +38,7 @@ public class UserTest {
 
     @Test
     public void testGetBirth() {
-        Date expected = new GregorianCalendar(
-                2022,
-                Calendar.MAY,
-                20
-        ).getTime();
+        LocalDate expected = LocalDate.of(1000, 12, 25);
         assertEquals(expected, testUser.getBirth());
     }
 }

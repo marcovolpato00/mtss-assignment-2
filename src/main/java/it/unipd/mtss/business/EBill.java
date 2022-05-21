@@ -5,6 +5,8 @@
 
 package it.unipd.mtss.business;
 
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -13,7 +15,11 @@ import it.unipd.mtss.model.EItem;
 import it.unipd.mtss.model.EItemType;
 import it.unipd.mtss.model.User;
 
-public class EBill implements Bill {
+public class EBill implements Bill {    
+    public int giftedOrders = 0;
+    public List<User> giftedUsers = new ArrayList<User>();
+
+
     public Stream<EItem> filterByItemType(List<EItem> items, EItemType type) {
         return items.stream().filter(item -> item.getItemType() == type);
     }
@@ -112,4 +118,22 @@ public class EBill implements Bill {
         return total;
     }
 
+
+    /*
+    ======================
+    ====== ISSUE #9 ======
+    ======================
+    */
+
+
+    public boolean giftOrder(User user, double random, LocalTime orderTime){
+        if(orderTime.isAfter(LocalTime.of(19,0,0)) || orderTime.isBefore(LocalTime.of(18,0,0))){return false;}
+        if(giftedOrders == 10) {return false;}
+        if(random > 0.9 && user.getAge() < 18 && !giftedUsers.contains(user)) {
+            giftedUsers.add(user);
+            giftedOrders++;
+            return true;
+        }
+        return false;
+    }
 }

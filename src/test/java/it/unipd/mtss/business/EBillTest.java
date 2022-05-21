@@ -21,6 +21,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,7 +37,7 @@ public class EBillTest {
         testUser = new User(
                 1,
                 "Jesus",
-                new GregorianCalendar(1000, Calendar.DECEMBER, 25).getTime()
+                LocalDate.of(1000, 12, 25)
         );
     }
 
@@ -288,5 +290,339 @@ public class EBillTest {
         );
 
         bill.getOrderPriceNoDiscount(items);
+    }
+
+
+    /*
+    ======================
+    ====== ISSUE #9 ======
+    ======================
+    */
+
+    @Test
+    public void testUnderageGifts_lessThanTenUnderAge_AllInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2005, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2008, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        
+        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 20, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 20, 15)));
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(18, 40, 35)));      
+        assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));      
+        assertEquals(1, bill.giftedOrders);
+    }
+
+    @Test
+    public void testUnderageGifts_lessThanTenUnderAge_SomeInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2005, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2008, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+
+        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 20, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 20, 15)));
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(false, bill.giftOrder(user3, 0.95, LocalTime.of(19, 20, 15)));
+        assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
+        assertEquals(1, bill.giftedOrders);
+    }
+
+
+    @Test
+    public void testUnderageGifts_lessThanTenUnderAge_NoneInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2005, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2008, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(20, 20, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(20, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(20, 40, 35)));
+        assertEquals(false, bill.giftOrder(user3, 0.95, LocalTime.of(19, 20, 15)));
+        assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(20, 30, 47)));  
+        assertEquals(0, bill.giftedOrders);
+    }
+
+    @Test
+    public void testUnderageGifts_lessThanTenNoneUnderAge(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2000, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2000, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2000, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(20, 20, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(20, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(20, 40, 35)));
+        assertEquals(false, bill.giftOrder(user3, 0.95, LocalTime.of(19, 20, 15)));
+        assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(20, 30, 47)));  
+        assertEquals(0, bill.giftedOrders);
+    }
+
+    @Test
+    public void testUnderageGifts_TenUnderAge_AllInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2010, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        
+        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 18, 15)));            
+        assertEquals(true, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
+        assertEquals(true, bill.giftOrder(user5, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(true, bill.giftOrder(user6, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user7, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user8, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user9, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user10, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(8, bill.giftedOrders);
+    }
+
+    public void testUnderageGifts_TenUnderAge_SomeInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2010, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        
+        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 18, 15)));            
+        assertEquals(true, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
+        assertEquals(true, bill.giftOrder(user5, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(false, bill.giftOrder(user6, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(false, bill.giftOrder(user7, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(false, bill.giftOrder(user8, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(false, bill.giftOrder(user9, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(false, bill.giftOrder(user10, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(5, bill.giftedOrders);
+    }
+
+    public void testUnderageGifts_TenUnderAge_NoneInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2010, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(20, 20, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(20, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(20, 20, 15)));            
+        assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(20, 30, 47)));  
+        assertEquals(false, bill.giftOrder(user5, 0.99, LocalTime.of(20, 40, 35)));
+        assertEquals(false, bill.giftOrder(user6, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user7, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user8, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user9, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user10, 0.95, LocalTime.of(20, 18, 15)));
+        assertEquals(0, bill.giftedOrders);
+    }
+
+    public void testUnderageGifts_TenNoneUnderAge(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2000, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2000, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2000, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2000, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2000, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2000, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2000, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 18, 15)));            
+        assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
+        assertEquals(false, bill.giftOrder(user5, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(false, bill.giftOrder(user6, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user7, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user8, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user9, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user10, 0.95, LocalTime.of(20, 18, 15)));
+        assertEquals(0, bill.giftedOrders);
+    }
+
+    @Test
+    public void testUnderageGifts_MoreThanTenUnderAge_AllInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2010, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user11 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        
+        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 18, 15)));            
+        assertEquals(true, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
+        assertEquals(true, bill.giftOrder(user5, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(true, bill.giftOrder(user6, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user7, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user8, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user9, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user10, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user11, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(9, bill.giftedOrders);
+    }
+
+    public void testUnderageGifts_MoreThanTenUnderAge_SomeInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2010, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user11 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+
+        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 18, 15)));            
+        assertEquals(true, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
+        assertEquals(true, bill.giftOrder(user5, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(false, bill.giftOrder(user6, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(false, bill.giftOrder(user7, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(false, bill.giftOrder(user8, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(false, bill.giftOrder(user9, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(false, bill.giftOrder(user10, 0.95, LocalTime.of(19, 19, 15)));
+        assertEquals(true, bill.giftOrder(user11, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(4, bill.giftedOrders);
+    }
+
+    public void testUnderageGifts_MoreThanTenUnderAge_NoneInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2010, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user11 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(20, 20, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(20, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(20, 20, 15)));            
+        assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(20, 30, 47)));  
+        assertEquals(false, bill.giftOrder(user5, 0.99, LocalTime.of(20, 40, 35)));
+        assertEquals(false, bill.giftOrder(user6, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user7, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user8, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user9, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user10, 0.95, LocalTime.of(20, 18, 15)));
+        assertEquals(false, bill.giftOrder(user11, 0.95, LocalTime.of(20, 18, 15)));
+        assertEquals(0, bill.giftedOrders);
+    }
+
+    public void testUnderageGifts_MoreThanTenNoneUnderAge(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2000, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2000, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2000, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2000, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2000, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2000, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2000, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        User user11 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
+        
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+        assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
+        assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 18, 15)));            
+        assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
+        assertEquals(false, bill.giftOrder(user5, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(false, bill.giftOrder(user6, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user7, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user8, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user9, 0.95, LocalTime.of(20, 20, 15)));
+        assertEquals(false, bill.giftOrder(user10, 0.95, LocalTime.of(20, 18, 15)));
+        assertEquals(false, bill.giftOrder(user11, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(0, bill.giftedOrders);
+    }
+
+    public void testUnderageGifts_MoreThanTenAllUnderAge_AllInTime(){
+        EBill bill = new EBill();
+
+        User user1 = new User( 1,"Jesus", LocalDate.of(2010, 12, 25));
+        User user2 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user3 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user4 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user5 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user6 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user7 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user8 = new User( 1,"Davide", LocalDate.of(2010, 3, 16));
+        User user9 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
+        User user10 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        User user11 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
+        
+        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+        assertEquals(true, bill.giftOrder(user2, 0.91, LocalTime.of(18, 10, 15)));
+        assertEquals(true, bill.giftOrder(user3, 0.92, LocalTime.of(18, 18, 15)));            
+        assertEquals(true, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
+        assertEquals(true, bill.giftOrder(user5, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(true, bill.giftOrder(user6, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user7, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user8, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user9, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(true, bill.giftOrder(user10, 0.95, LocalTime.of(18, 18, 15)));
+        assertEquals(false, bill.giftOrder(user11, 0.99, LocalTime.of(18, 40, 35)));
+        assertEquals(10, bill.giftedOrders);
     }
 }
