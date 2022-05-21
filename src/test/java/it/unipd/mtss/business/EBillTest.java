@@ -194,21 +194,17 @@ public class EBillTest {
     @Test
     public void testBigOrderDiscount() throws BillException {
         EBill bill = new EBill();
-
         List<EItem> items = Arrays.asList(
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50),
                 new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
         );
-
         double total = bill.getOrderPriceNoDiscount(items);
 
-        double expectedTotal = 449.50 * 3;
+        double discountend = total - bill.getBigOrderDiscount(total);
 
-        assertEquals(expectedTotal, total, 0.0);
+        assertEquals(total - (total * 0.1), discountend, 0.0);
     }
-
-
 
     /*
     ======================
