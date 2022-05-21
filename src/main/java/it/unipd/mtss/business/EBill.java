@@ -88,17 +88,19 @@ public class EBill implements Bill {
         return 0.0;
     }
 
-    @Override
-    public double getOrderPrice(List<EItem> itemsOrdered, User user)
-            throws BillException {
+    public double getOrderPriceNoDiscount(List<EItem> itemsOrdered) throws BillException {
         if (itemsOrdered.isEmpty()) {
             throw new BillException("Items list can't be empty");
         }
 
         checkThirtyItemsOrder(itemsOrdered);
 
-        double total = itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
+        return itemsOrdered.stream().mapToDouble(EItem::getPrice).sum();
+    }
 
+    @Override
+    public double getOrderPrice(List<EItem> itemsOrdered, User user) throws BillException {
+        double total = getOrderPriceNoDiscount(itemsOrdered);
         double totalDiscount = 0.0;
 
         totalDiscount += getMiceGift(itemsOrdered);
