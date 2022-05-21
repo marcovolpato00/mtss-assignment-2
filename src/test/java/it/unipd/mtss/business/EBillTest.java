@@ -289,4 +289,31 @@ public class EBillTest {
 
         bill.getOrderPriceNoDiscount(items);
     }
+
+    @Test
+    public void testOrderHasCommission() throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.MOUSE, "Topolino cheap", 9.90)
+        );
+
+        double total = bill.getOrderPriceNoDiscount(items);
+
+        assertEquals(9.90 + 2.0, total, 0.0);
+    }
+
+    @Test
+    public void testOrderHasNotCommission() throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.MOUSE, "Topolino cheap", 9.90),
+                new EItem(EItemType.MOUSE, "Topolino cheap", 9.90)
+        );
+
+        double total = bill.getOrderPriceNoDiscount(items);
+
+        assertEquals(19.80, total, 0.0);
+    }
 }
