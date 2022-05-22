@@ -399,6 +399,7 @@ public class EBillTest {
         assertEquals(8, bill.giftedOrders);
     }
 
+    @Test
     public void testUnderageGifts_TenUnderAge_SomeInTime(){
         EBill bill = new EBill();
 
@@ -423,9 +424,10 @@ public class EBillTest {
         assertEquals(false, bill.giftOrder(user8, 0.95, LocalTime.of(19, 19, 15)));
         assertEquals(false, bill.giftOrder(user9, 0.95, LocalTime.of(19, 19, 15)));
         assertEquals(false, bill.giftOrder(user10, 0.95, LocalTime.of(19, 19, 15)));
-        assertEquals(5, bill.giftedOrders);
+        assertEquals(3, bill.giftedOrders);
     }
 
+    @Test
     public void testUnderageGifts_TenUnderAge_NoneInTime(){
         EBill bill = new EBill();
 
@@ -453,6 +455,7 @@ public class EBillTest {
         assertEquals(0, bill.giftedOrders);
     }
 
+    @Test
     public void testUnderageGifts_TenNoneUnderAge(){
         EBill bill = new EBill();
 
@@ -510,6 +513,7 @@ public class EBillTest {
         assertEquals(9, bill.giftedOrders);
     }
 
+    @Test
     public void testUnderageGifts_MoreThanTenUnderAge_SomeInTime(){
         EBill bill = new EBill();
 
@@ -539,6 +543,7 @@ public class EBillTest {
         assertEquals(4, bill.giftedOrders);
     }
 
+    @Test
     public void testUnderageGifts_MoreThanTenUnderAge_NoneInTime(){
         EBill bill = new EBill();
 
@@ -568,6 +573,7 @@ public class EBillTest {
         assertEquals(0, bill.giftedOrders);
     }
 
+    @Test
     public void testUnderageGifts_MoreThanTenNoneUnderAge(){
         EBill bill = new EBill();
 
@@ -597,6 +603,7 @@ public class EBillTest {
         assertEquals(0, bill.giftedOrders);
     }
 
+    @Test
     public void testUnderageGifts_MoreThanTenAllUnderAge_AllInTime(){
         EBill bill = new EBill();
 
