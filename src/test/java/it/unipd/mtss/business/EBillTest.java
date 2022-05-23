@@ -17,9 +17,7 @@ import org.junit.rules.ExpectedException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -658,5 +656,24 @@ public class EBillTest {
         double total = bill.getOrderPriceNoDiscount(items);
 
         assertEquals(19.80, total, 0.0);
+    }
+
+    @Test
+    public void testGetOrderPriceHasRightTotal() throws BillException {
+        EBill bill = new EBill();
+
+        List<EItem> items = Arrays.asList(
+                new EItem(EItemType.PROCESSORE, "Intel i5 1111k", 111.90),
+                new EItem(EItemType.SCHEDAMADRE, "Mobo 1", 98.50),
+                new EItem(EItemType.PROCESSORE, "Intel i5 2222k", 222.90),
+                new EItem(EItemType.PROCESSORE, "Intel i5 3333k", 333.90),
+                new EItem(EItemType.MOUSE, "Topolino", 20.10),
+                new EItem(EItemType.PROCESSORE, "Intel i5 4444k", 444.90),
+                new EItem(EItemType.TASTIERA, "Razer SuperKeys 7000", 449.50)
+        );
+
+        double total = bill.getOrderPrice(items, testUser);
+
+        assertEquals(1493.43, total, 0.0);
     }
 }
