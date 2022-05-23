@@ -15,7 +15,7 @@ import it.unipd.mtss.model.EItem;
 import it.unipd.mtss.model.EItemType;
 import it.unipd.mtss.model.User;
 
-public class EBill implements Bill {    
+public class EBill implements Bill {
     public int giftedOrders = 0;
     public List<User> giftedUsers = new ArrayList<User>();
 
@@ -97,6 +97,25 @@ public class EBill implements Bill {
         return (orderTotal < 10.0) ? 2.0 : 0.0;
     }
 
+    public boolean giftOrder(User user, double random, LocalTime orderTime) {
+        if (giftedOrders == 10) {
+            return false;
+        }
+
+        if (orderTime.isAfter(LocalTime.of(19, 0, 0)) || orderTime.isBefore(LocalTime.of(18, 0, 0))
+        ) {
+            return false;
+        }
+
+        if (random > 0.9 && user.getAge() < 18 && !giftedUsers.contains(user)) {
+            giftedUsers.add(user);
+            giftedOrders++;
+            return true;
+        }
+
+        return false;
+    }
+
     public double getOrderPriceNoDiscount(List<EItem> itemsOrdered) throws BillException {
         if (itemsOrdered.isEmpty()) {
             throw new BillException("Items list can't be empty");
@@ -112,6 +131,11 @@ public class EBill implements Bill {
 
     @Override
     public double getOrderPrice(List<EItem> itemsOrdered, User user) throws BillException {
+        if (giftOrder(user, Math.random(), LocalTime.now()))
+        {
+            return 0.0;
+        }
+
         double total = getOrderPriceNoDiscount(itemsOrdered);
         double totalDiscount = 0.0;
 
@@ -123,24 +147,5 @@ public class EBill implements Bill {
         total -= totalDiscount;
 
         return total;
-    }
-
-
-    /*
-    ======================
-    ====== ISSUE #9 ======
-    ======================
-    */
-
-
-    public boolean giftOrder(User user, double random, LocalTime orderTime){
-        if(orderTime.isAfter(LocalTime.of(19,0,0)) || orderTime.isBefore(LocalTime.of(18,0,0))){return false;}
-        if(giftedOrders == 10) {return false;}
-        if(random > 0.9 && user.getAge() < 18 && !giftedUsers.contains(user)) {
-            giftedUsers.add(user);
-            giftedOrders++;
-            return true;
-        }
-        return false;
     }
 }

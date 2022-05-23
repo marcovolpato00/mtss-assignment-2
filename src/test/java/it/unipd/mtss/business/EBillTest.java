@@ -588,8 +588,8 @@ public class EBillTest {
         User user9 = new User( 1,"Marco", LocalDate.of(2000, 5, 21));
         User user10 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
         User user11 = new User( 1,"Marco", LocalDate.of(2000, 1, 1));
-        
-        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+
+        assertEquals(false, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15)));
         assertEquals(false, bill.giftOrder(user2, 0.1, LocalTime.of(18, 10, 15)));
         assertEquals(false, bill.giftOrder(user3, 0.9, LocalTime.of(18, 18, 15)));            
         assertEquals(false, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
@@ -618,8 +618,8 @@ public class EBillTest {
         User user9 = new User( 1,"Marco", LocalDate.of(2010, 5, 21));
         User user10 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
         User user11 = new User( 1,"Marco", LocalDate.of(2010, 1, 1));
-        
-        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15))); 
+
+        assertEquals(true, bill.giftOrder(user1, 0.99, LocalTime.of(18, 18, 15)));
         assertEquals(true, bill.giftOrder(user2, 0.91, LocalTime.of(18, 10, 15)));
         assertEquals(true, bill.giftOrder(user3, 0.92, LocalTime.of(18, 18, 15)));            
         assertEquals(true, bill.giftOrder(user4, 0.92, LocalTime.of(18, 30, 47)));  
@@ -637,7 +637,7 @@ public class EBillTest {
     public void testOrderHasCommission() throws BillException {
         EBill bill = new EBill();
 
-        List<EItem> items = Arrays.asList(
+        List<EItem> items = Collections.singletonList(
                 new EItem(EItemType.MOUSE, "Topolino cheap", 9.90)
         );
 
